@@ -4,19 +4,31 @@ using System.Collections;
 public enum PlayerWeaponType{KNIFE,PISTOL,NULL}
 
 public class PlayerController : MonoBehaviour {
+	
+	//General
+	public GameObject Player; 
+	float dodgeTimer;
+	bool dodging = false;
+	float moveSpeed; 
+	float moveDirection;
 
 	//Movement
-	public float moveSpeed=10.0f;
 	public Animator animator;
+	public float runSpeed=10.0f;
+
+	public float dodgeDistance=50.0f;
+	public float dodgeTime = 0.4f;
+
 	//Combat
 	public Rigidbody myRigidBody;
 	//public Transform hitTestPivot,gunPivot;
 	public GameObject mousePointer,proyectilePrefab;
-
+	float attackTime = 0.4f;
 
 
 	int hashSpeed;
-	float attackTime = 0.4f;
+	float cooldownTimer;
+
 
 	void Start () 
 	{
@@ -30,13 +42,40 @@ public class PlayerController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		cooldownTimer = Mathf.Max (0f, cooldownTimer - Time.deltaTime);
+			
 		animator.SetFloat (hashSpeed, myRigidBody.velocity .magnitude);
 
 		float inputHorizontal = Input.GetAxis ("Horizontal");
 		float inputVertical = Input.GetAxis ("Vertical");
 
-		Vector3 newVelocity=new Vector3(inputVertical*moveSpeed, 0.0f, inputHorizontal*-moveSpeed);
-		myRigidBody.velocity = newVelocity;
+		if (!dodging && cooldownTimer == 0 && Input.GetKeyDown (KeyCode.Space)) 
+		{
+			print ("Dodged!");
+			dodging = true;
+			dodgeTimer = dodgeTime;
+		
+		}
+
+		if(dodging && dodgeTimer != 0)
+		{
+			dodgeTimer = Mathf.Max (0f, dodgeTimer - Time.deltaTime);
+	
+			Vector3 newVelocity=new Vector3(inputVertical*dodgeDistance, 0.0f, inputHorizontal*-dodgeDistance);
+			myRigidBody.velocity = newVelocity;
+
+		} 
+
+		if(!dodging)
+		{
+			Vector3 newVelocity=new Vector3(inputVertical*runSpeed, 0.0f, inputHorizontal*-runSpeed);
+			myRigidBody.velocity = newVelocity;
+		}
+
+		if (dodgeTimer == 0) 
+		{
+			dodging = false;
+		}
 
 		UpdateAim ();
 	

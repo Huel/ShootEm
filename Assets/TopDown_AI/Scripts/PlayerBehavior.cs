@@ -30,7 +30,7 @@ public class PlayerBehavior : MonoBehaviour {
 		float inputHorizontal = Input.GetAxis ("Horizontal");
 		float inputVertical = Input.GetAxis ("Vertical");
 	//	float speedY = inputVertical > 0.1 ? Mathf.Clamp ((inputVertical * moveSpeed), moveSpeed / 2.0f, moveSpeed) : 0.0f;
-		//float speedX = inputHorizontal > 0.1 ? Mathf.Clamp ((inputHorizontal * moveSpeed), moveSpeed / 2.0f, moveSpeed) : 0.0f;
+		//float speedX = inputHorizontal > 0.1 ? Mathf.Clamp ((inputHorizontal * moveSpeed), moveSpeed / 2.0f, moveSpeed) :  0.0f;
 		Vector3 newVelocity=new Vector3(inputVertical*moveSpeed, 0.0f, inputHorizontal*-moveSpeed);
 		myRigidBody.velocity = newVelocity;
 		switch (currentWeapon) {
